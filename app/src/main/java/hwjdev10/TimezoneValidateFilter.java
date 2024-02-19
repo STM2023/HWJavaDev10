@@ -22,12 +22,22 @@ public class TimezoneValidateFilter extends HttpFilter {
         String value = req.getParameter("timezone");
 
         String timeZoneName = TimeZone.getDefault().getDisplayName();//.getID();
+        int offset ;
+        String sign;
 
-        int offset =Integer.parseInt (value.substring(4, value.length()));
-        String sign=value.substring(3, 4);
+        if(value==null){
+            offset =0;
+            sign="";
+        }else if (value.length()<4) {
+            offset = 2;
+            sign="";
+        }else{
+            offset = Integer.parseInt(value.substring(4, value.length()));
+            sign = value.substring(3, 4);
+        }
        // System.out.println(" sign ="+sign);
-       // System.out.println(" offset "+offset);
-        if( value==null |(offset<=18)& (timeZoneName!=null)&("+".equals(sign)|"-".equals(sign))) {
+       // System.out.println(" offset ="+offset);
+        if( value==null |offset==2|(offset<=18)& (timeZoneName!=null)&("+".equals(sign)|"-".equals(sign))) {
             chain.doFilter(req, resp);
         }
              else {
